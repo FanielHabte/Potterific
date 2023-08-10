@@ -1,0 +1,109 @@
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    </head>
+    <style>
+        button {
+            margin: 3px;
+        }
+        .over {
+            background-color: orange;
+        }
+        
+        .selected {
+            background-color: green;
+        }
+        .odd {
+            background-color: #fffccc;
+        }
+        
+    </style>
+    <body>
+        <div id="buttons"></div>
+        <table border='1'><tr><th>Name</th><th>Role</th><th>House</th><th>Gender</th><th>Aligns</td><tr></table>
+        <p></p>
+        <button id="resetButton">Reset</button>
+
+    </body>
+        
+        <script>
+             $(document).ready(function () {
+        // list of characters
+        var characters = [
+        {name:"Albus Dumbledore", role:"staff", house:"Gryffindor",gender:"m",alignment:"good"},    
+        {name:"Nymphadora Tonks", role:"", house:"Hufflepuff",gender:"f",alignment:"good"},    
+        {name:"Ron Weasley", role:"student", house:"Gryffindor",gender:"m",alignment:"good"},    
+        {name:"Ginny Weasley", role:"student", house:"Gryffindor",gender:"f",alignment:"good"},    
+        {name:"Hermione Granger", role:"student", house:"Gryffindor",gender:"f",alignment:"good"},    
+        {name:"Mad-eye Moody", role:"staff", house:"",gender:"m",alignment:"good"},    
+        {name:"Prof McGonagall", role:"staff", house:"Gryffindor",gender:"f",alignment:"good"},    
+        {name:"Harry Potter", role:"student", house:"Gryffindor",gender:"m",alignment:"good"},    
+        {name:"Draco Malfoy", role:"student", house:"Slytherin",gender:"m",alignment:"evil"},    
+        {name:"Hagrid", role:"staff", house:"Gryffindor",gender:"m",alignment:"good"},    
+        {name:"Luna Lovegood", role:"student", house:"Ravenclaw",gender:"f",alignment:"good"},    
+        {name:"Voldemort", role:"", house:"Slytherin",gender:"m",alignment:"evil"},    
+        {name:"Bellatrix Lestrange", role:"", house:"Slytherin",gender:"f",alignment:"evil"},           
+        {name:"Severus Snape", role:"staff", house:"Slytherin",gender:"m",alignment:"?"},    
+        {name:"Dobby", role:"", house:"",gender:"?",alignment:"good"}
+        ];
+
+
+        
+            var houses = [];
+                 var characterTable = $("table");
+
+                 characters.forEach(function (character) {
+                     var row = $("<tr>");
+                     $("<td>").text(character.name).appendTo(row);
+                     $("<td>").text(character.role).appendTo(row);
+                     $("<td>").text(character.house).appendTo(row);
+                     $("<td>").text(character.gender).appendTo(row);
+                     $("<td>").text(character.alignment).appendTo(row);
+                     row.appendTo(characterTable);
+
+                     if (houses.indexOf(character.house) === -1) {
+                         houses.push(character.house);
+                         $("#buttons").append("<button>" + character.house + "</button>");
+                     }
+                 });
+
+                 var buttons = $("button");
+
+                 buttons.on("mouseenter", function () {
+                     $(this).addClass("over");
+                 });
+
+                 buttons.on("mouseleave", function () {
+                     $(this).removeClass("over");
+                 });
+
+                 buttons.on("click", function () {
+                     var selection = $(this).text();
+                     buttons.removeClass("selected");
+                     $(this).addClass("selected");
+
+                     $("tr").show();
+                     $("tr:visible:odd").addClass("odd");
+
+                     if (selection !== "Reset") {
+                         toggleRows(selection);
+                     }
+                 });
+
+
+                    resetButton.on("click", function () {
+                     buttons.removeClass("selected");
+                     $("tr").show();
+                     $("tr:visible:odd").addClass("odd");
+                 });
+
+                 function toggleRows(text) {
+                     var rowsToHide = $("td:nth-child(3)").not(":contains('" + text + "')").parent();
+                     rowsToHide.hide().promise().done(function () {
+                         $("tr:visible:odd").addClass("odd");
+                     });
+                 }
+             });
+
+        </script>
+</html>
