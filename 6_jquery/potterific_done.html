@@ -22,11 +22,12 @@
         <div id="buttons"></div>
         <table border='1'><tr><th>Name</th><th>Role</th><th>House</th><th>Gender</th><th>Aligns</td><tr></table>
         <p></p>
-        <button>reset</button>
+        <button id="resetButton">Reset</button>
 
     </body>
         
         <script>
+             $(document).ready(function () {
         // list of characters
         var characters = [
         {name:"Albus Dumbledore", role:"staff", house:"Gryffindor",gender:"m",alignment:"good"},    
@@ -47,55 +48,62 @@
         ];
 
 
-        $(document).ready(function(){
-            // add rows to table
+        
             var houses = [];
-            for (var row in characters) {
-                $("table").append("<tr><td>" +characters[row].name+ "</td><td>" +characters[row].role+ "</td><td>" +characters[row].house+ "</td><td>" +characters[row].gender+ "</td><td>" +characters[row].alignment+ "</td></tr>");
-                var house = characters[row].house;
-                if (house && houses.indexOf(house) == -1) {
-                    houses.push(house);
-                    $("#buttons").append("<button>" +house+ "</button>");
-                }
-            }
-            $("tr:visible:odd").addClass("odd");
+                 var characterTable = $("table");
 
-            var buttons = $('button');
+                 characters.forEach(function (character) {
+                     var row = $("<tr>");
+                     $("<td>").text(character.name).appendTo(row);
+                     $("<td>").text(character.role).appendTo(row);
+                     $("<td>").text(character.house).appendTo(row);
+                     $("<td>").text(character.gender).appendTo(row);
+                     $("<td>").text(character.alignment).appendTo(row);
+                     row.appendTo(characterTable);
 
-            buttons.on('mouseenter', function(e) {
-                var $this = $(this);
-                $this.addClass("over");
-            });
-        
-            buttons.on('mouseleave', function() {
-                var $this = $(this);
-                $this.removeClass("over");
-            });
-        
-            buttons.on('click', function() {
-                $(".selected").removeClass("selected");
-                $(this).addClass("selected");
-                
-                $("tr").show(); // unhide rows
-                $("tr").removeClass("odd");
+                     if (houses.indexOf(character.house) === -1) {
+                         houses.push(character.house);
+                         $("#buttons").append("<button>" + character.house + "</button>");
+                     }
+                 });
 
-                var selection = $(this).text();
-                if (selection != 'reset') {
-                    toggleRows(selection);
-                } else {
-                    $("tr:visible:odd").addClass("odd");
-                }
-            });
+                 var buttons = $("button");
 
-        });
+                 buttons.on("mouseenter", function () {
+                     $(this).addClass("over");
+                 });
 
-        // show or hide selected table rows that match selected text
-        function toggleRows(text) {
-            var rows = $('td:nth-child(3)').not(':contains("' +text+ '")').parent()
-            rows.hide().promise().done(function(){
-                $("tr:visible:odd").addClass("odd");
-            });
-        }
+                 buttons.on("mouseleave", function () {
+                     $(this).removeClass("over");
+                 });
+
+                 buttons.on("click", function () {
+                     var selection = $(this).text();
+                     buttons.removeClass("selected");
+                     $(this).addClass("selected");
+
+                     $("tr").show();
+                     $("tr:visible:odd").addClass("odd");
+
+                     if (selection !== "Reset") {
+                         toggleRows(selection);
+                     }
+                 });
+
+
+                    resetButton.on("click", function () {
+                     buttons.removeClass("selected");
+                     $("tr").show();
+                     $("tr:visible:odd").addClass("odd");
+                 });
+
+                 function toggleRows(text) {
+                     var rowsToHide = $("td:nth-child(3)").not(":contains('" + text + "')").parent();
+                     rowsToHide.hide().promise().done(function () {
+                         $("tr:visible:odd").addClass("odd");
+                     });
+                 }
+             });
 
         </script>
 </html>
